@@ -1,6 +1,6 @@
 ﻿#!/usr/bin/python
 # -*- coding: UTF-8 -*-
-# This pipeline was created by Jin-Zhongxin in September, 2022.
+# This pipeline was created by JZX in September, 2022.
 # To establish the connection among AS (Alternative splicing), ATI (alternative transcriptional initiation) and APA (Alternative polyadenylation), 
 # polyA-removed ccs reads were mapped to reference genome thus obtained the transcription start site (TSS) and polyA site (PAS), and were
 # also collapsed into transcripts and then divided by suppa2 according AS event.
