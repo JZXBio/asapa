@@ -91,8 +91,10 @@ Independent installation required
 
 """
 #Sequencing primers of IsoSeq should be specified correctly. Two common primers are provided.
+#Edit the script file if the primer needs to be changed.
 isoseq_primer1=">primer_5p\nAAGCAGTGGTATCAACGCAGAGTACATGGGG\n>primer_3p\nAAGCAGTGGTATCAACGCAGAGTAC\n"
 isoseq_primer2=">primer_5p\nATGTAATACGACTCACTATAGGGC\n>primer_3p\nAAAAAAAAAACGCCTGAGA\n"
+
 #help
 if (len(sys.argv)==1) or sys.argv[1] in ("h","-h","help","-help"):print(help_txt);sys.exit()
 if sys.argv[1] not in ("build","AS_AS","AS_ATI","AS_APA","ATI_APA"):print(help_txt);sys.exit()
