@@ -2,17 +2,16 @@ ASAPA
 ====
 python asapa.py-----help:<br>
 Version = 1.0.0
-
-Preparation: the subreads files were processed using pbCCS, Lima, and SUPPA2
-Usage: **python asapa.py build ref.fa  subreads.bam/qry_dir(contain *.bam)/all(current dir)**
 ```
+Preparation: the subreads files were processed using pbCCS, Lima, and SUPPA2
+    Usage: python asapa.py build ref.fa  subreads.bam / qry_dir(contain *.bam) / all(current dir)
     Optional parameters:
         -n                      default=15, CPU thread number
         -log                    default=no, yes will write terminal print in output.log
         -max_fuzzy_TSS          default=5,  Max fuzzy TSS dist
         -max_fuzzy_PAS          default=5,  Max fuzzy PAS dist
         -max_fuzzy_junction     default=5,  Max fuzzy junction dist(from cDNA_cupcake)
-```
+
 Function1: AS vs AS
     Usage: python asapa.py AS_AS 
     Optional parameters: 
@@ -43,14 +42,14 @@ Function4: ATI vs APA
         -min_TSSPASccs_usage    default=0.5, min ccs usage(used/TSSPASccs)
         -min_correlation        default=0.5, min spearman correlation
         -max_bin_extent         default=1000,  Max distance of binning extension
-
-The output folder will be created in the current path:
-    output0_preparation (preparation: subreads to ccs, lima, minimap2, cDNA_cupcake and SUPPA2)
-    output1_ASAS    (function1: coupling bewteen AS and AS)
-    output2_ASATI    (function2: coupling bewteen AS and ATI)
-    output3_ASAPA    (function3: coupling bewteen AS and APA)
-    output4_ATIAPA    (function4: coupling bewteen ATI and APA)
-
+```
+The output folder will be created in the current path:<br>
+    output0_preparation (preparation: subreads to ccs, lima, minimap2, cDNA_cupcake and SUPPA2)<br>
+    output1_ASAS                (function1: coupling bewteen AS and AS)<br>
+    output2_ASATI               (function2: coupling bewteen AS and ATI)<br>
+    output3_ASAPA               (function3: coupling bewteen AS and APA)<br>
+    output4_ATIAPA              (function4: coupling bewteen ATI and APA)<br>
+```
 Dependency:
 Conda is recommended
      conda install pbbam
@@ -68,7 +67,7 @@ Conda is recommended
 
 Independent installation required
      cDNA_Cupcake
-
+```
 <br>
 #Sequencing primers of IsoSeq should be specified correctly. Two common primers are provided.<br>
 primer1_5p：AAGCAGTGGTATCAACGCAGAGTACATGGGG     primer1_3p：AAGCAGTGGTATCAACGCAGAGTAC<br>
