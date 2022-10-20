@@ -1,14 +1,14 @@
-python asapa.py-----help:
-Version = 1.0.0
+python asapa.py-----help:<br>
+Version = 1.0.0<br>
 \t
-Preparation: the subreads files were processed using pbCCS, Lima, and SUPPA2
-\tUsage: python asapa.py build ref.fa  subreads.bam/qry_dir(contain *.bam)/all(current dir)
-\tOptional parameters:
-\t\t-n                  \tdefault=15, CPU thread number
-\t\t-log                \tdefault=no, yes will write terminal print in output.log
-\t\t-max_fuzzy_TSS      \tdefault=5,  Max fuzzy TSS dist
-\t\t-max_fuzzy_PAS      \tdefault=5,  Max fuzzy PAS dist
-\t\t-max_fuzzy_junction \tdefault=5,  Max fuzzy junction dist(from cDNA_cupcake)
+Preparation: the subreads files were processed using pbCCS, Lima, and SUPPA2<br>
+\tUsage: python asapa.py build ref.fa  subreads.bam/qry_dir(contain *.bam)/all(current dir)<br>
+\tOptional parameters:<br>
+\t\t-n                  \tdefault=15, CPU thread number<br>
+\t\t-log                \tdefault=no, yes will write terminal print in output.log<br>
+\t\t-max_fuzzy_TSS      \tdefault=5,  Max fuzzy TSS dist<br>
+\t\t-max_fuzzy_PAS      \tdefault=5,  Max fuzzy PAS dist<br>
+\t\t-max_fuzzy_junction \tdefault=5,  Max fuzzy junction dist(from cDNA_cupcake)<br>
 
 Function1: AS vs AS
 \tUsage: python asapa.py AS_AS 
