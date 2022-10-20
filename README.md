@@ -70,7 +70,9 @@ Independent installation required
 ```
 <br>
 #Sequencing primers of IsoSeq should be specified correctly. Two common primers are provided.<br>
-primer1_5p：AAGCAGTGGTATCAACGCAGAGTACATGGGG     primer1_3p：AAGCAGTGGTATCAACGCAGAGTAC<br>
-primer2_5p：ATGTAATACGACTCACTATAGGGC            primer2_3p：CGCCTGAGA<br>
+primer1_5p：AAGCAGTGGTATCAACGCAGAGTACATGGGG  <br>     
+primer1_3p：AAGCAGTGGTATCAACGCAGAGTAC        <br>
+primer2_5p：ATGTAATACGACTCACTATAGGGC         <br>          
+primer2_3p：CGCCTGAGA                        <br>
 Edit the script file if the primer needs to be changed.<br>
 <br>
