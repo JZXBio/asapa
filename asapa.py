@@ -1,6 +1,6 @@
-﻿#!/usr/bin/python
+#!/usr/bin/python
 # -*- coding: UTF-8 -*-
-# This pipeline was created by JZX in September, 2022.
+# This pipeline was created by Jin-Zhongxin in September, 2022.
 # To establish the connection among AS (Alternative splicing), ATI (alternative transcriptional initiation) and APA (Alternative polyadenylation), 
 # polyA-removed ccs reads were mapped to reference genome thus obtained the transcription start site (TSS) and polyA site (PAS), and were
 # also collapsed into transcripts and then divided by suppa2 according AS event.
@@ -19,6 +19,7 @@ from scipy.stats import chi2_contingency
 from scipy.stats import spearmanr
 from scipy.stats import fisher_exact
 import numpy as np
+#from subprocess import call as sp_call
 
 help_txt="""
 python asapa.py-----help:
@@ -73,7 +74,6 @@ The output folder will be created in the current path:
 
 Dependency:
 Conda is recommended
-\t conda install pbbam
 \t conda install pbccs==6.4
 \t conda install lima
 \t conda install minimap2
@@ -91,10 +91,8 @@ Independent installation required
 
 """
 #Sequencing primers of IsoSeq should be specified correctly. Two common primers are provided.
-#Edit the script file if the primer needs to be changed.
 isoseq_primer1=">primer_5p\nAAGCAGTGGTATCAACGCAGAGTACATGGGG\n>primer_3p\nAAGCAGTGGTATCAACGCAGAGTAC\n"
 isoseq_primer2=">primer_5p\nATGTAATACGACTCACTATAGGGC\n>primer_3p\nAAAAAAAAAACGCCTGAGA\n"
-
 #help
 if (len(sys.argv)==1) or sys.argv[1] in ("h","-h","help","-help"):print(help_txt);sys.exit()
 if sys.argv[1] not in ("build","AS_AS","AS_ATI","AS_APA","ATI_APA"):print(help_txt);sys.exit()
@@ -106,6 +104,7 @@ elif sys.argv[1] =="ATI_APA":	outputfile="toutput4_ATIAPA"
 argument_name_list=[]
 argument_index_list=[]  
 if sys.argv[1]=="build":
+    if len(sys.argv)<4: print("ERROR, the number of parameters is incorrect. The build step need Ref and bam files.");exit()
     if len(sys.argv)==4:
         thread="15"
         log="no"
@@ -115,12 +114,14 @@ if sys.argv[1]=="build":
         ref=sys.argv[2]
         qry=sys.argv[3]
     elif len(sys.argv)>4:
-        if (len(sys.argv)-3)%2!=0:	print("ERROR, the number of parameters is incorrect.");exit()
+        if (len(sys.argv)-4)%2!=0:	print("ERROR, the number of parameters is incorrect.");exit()
         if sys.argv[-1][0]=="-":	print("ERROR, the value of "+sys.argv[-1]+" was not sepecified.");exit()
         thread_index=""
+        log_index=""
         max_fuzzy_TSS_index=""
         max_fuzzy_PAS_index=""
         max_fuzzy_junction_index=""
+        i=0
         for x in sys.argv:
             if "-"==x[0]:
                 if x[1:] not in ["n","log","max_fuzzy_TSS","max_fuzzy_PAS","max_fuzzy_junction"]:print("Error, unrecognized parameter: "+x);exit()  
@@ -151,7 +152,7 @@ if sys.argv[1]=="build":
         inputoutput_index_list=[]       
         i=0
         while i<len(sys.argv):
-            if i>0 and i not in argument_index_list:
+            if i>1 and i not in argument_index_list:
                 inputoutput_index_list.append(i)
             i+=1    
         if len(inputoutput_index_list)!=2:
@@ -719,14 +720,14 @@ if sys.argv[1] =="build":
     with open ("./script/getfastabylist.pl","w",encoding="utf-8") as f:
         f.write(getfastabylist_script)
         f.close()
-    
+        
     if "./1ccs_2lima" in os.listdir("./"):
         print("Note: ./1ccs_2lima exitst")
     else: 
         subprocess.run(["mkdir ./1ccs_2lima"],shell=True)
     
     os.chdir("./1ccs_2lima") 
-    
+
     print()
     i=0
     while i<qry_len:
@@ -741,7 +742,7 @@ if sys.argv[1] =="build":
         subprocess.run(["mkdir 1-ccs"],shell=True)
         #For RSII data, conda install pbccs=3.4
         #cmd="ccs ../../"+qryfile_dir+qry_file+" --minPasses 1 ./1-ccs/ROI.bam";subprocess.run([cmd],shell=True)      #pbccs=3.4
-        #cmd="ccs ../../../"+qryfile_dir+qry_file+" --minPasses 1 --min-rq 0.9 ./1-ccs/ROI.bam";subprocess.run([cmd],shell=True) 	#pbccs=6.4	
+        cmd="ccs ../../../"+qryfile_dir+qry_file+" --minPasses 1 --min-rq 0.9 ./1-ccs/ROI.bam";subprocess.run([cmd],shell=True) 	#pbccs=6.4	
         print("     2-lima")
         subprocess.run(["mkdir 2-lima"],shell=True)
         with open ("./2-lima/primers.fasta","w",encoding="ISO-8859-1") as f:
@@ -813,7 +814,7 @@ if sys.argv[1] =="build":
         subprocess.run(["rm  *.bam"],shell=True)
     cmd="samtools sort -@  "+thread+" -o ./3-all_FLNC/all_FLNC_sort.bam ./3-all_FLNC/all_FLNC.bam 1>/dev/null 2>&1";subprocess.run([cmd],shell=True) 
     subprocess.run(["rm ./3-all_FLNC/all_FLNC.bam"],shell=True)
-    cmd="pbindex ./3-all_FLNC/all_FLNC_sort.bam ";subprocess.run([cmd],shell=True) 
+    #cmd="pbindex ./3-all_FLNC/all_FLNC_sort.bam ";subprocess.run([cmd],shell=True) 
     cmd="bedtools bamtofastq -i ./3-all_FLNC/all_FLNC_sort.bam -fq ./3-all_FLNC/all_FLNC.fq";subprocess.run([cmd],shell=True) 
     cmd="awk '{if(NR%4 == 1){print \">\" substr($0, 2)}}{if(NR%4 == 2){print}}' ./3-all_FLNC/all_FLNC.fq > ./3-all_FLNC/all_FLNC.fa";subprocess.run([cmd],shell=True) 
     subprocess.run(["rm ./3-all_FLNC/all_FLNC.fq"],shell=True)
@@ -833,7 +834,7 @@ if sys.argv[1] =="build":
     print ("     4-all_FLNC_minimap2ref")
     subprocess.run(["mkdir ./4-all_FLNC_minimap2ref"],shell=True)
     print ("          Map and sort")
-    subprocess.run(["cp "+ref+" ./4-all_FLNC_minimap2ref/ref.fa"],shell=True)
+    subprocess.run(["cp ../"+ref+" ./4-all_FLNC_minimap2ref/ref.fa"],shell=True)
     cmd="minimap2 -ax splice -uf -k 14 -t "+thread+" --secondary=no ./4-all_FLNC_minimap2ref/ref.fa ./3-all_FLNC/all_FLNC_nopolyA.fa > ./4-all_FLNC_minimap2ref/minimap.sam 2>/dev/null";subprocess.run([cmd],shell=True) 
     cmd="samtools view -bS ./4-all_FLNC_minimap2ref/minimap.sam > ./4-all_FLNC_minimap2ref/minimap.bam -@ "+thread;subprocess.run([cmd],shell=True)
     cmd="samtools sort ./4-all_FLNC_minimap2ref/minimap.bam -@ "+thread+" -o ./4-all_FLNC_minimap2ref/minimap.sort.bam 1>/dev/null 2>&1";subprocess.run([cmd],shell=True) 
@@ -906,7 +907,7 @@ if sys.argv[1] =="build":
             last_ccs=one_ccs
     print()
     subprocess.run(["rm ./4-all_FLNC_minimap2ref/FLNC_inform ./4-all_FLNC_minimap2ref/FLNC_inform.f1 ./4-all_FLNC_minimap2ref/FLNC_inform.f1.non-uniq"],shell=True)
-    exit()
+
     print ("     5-cDNA_cupcake")
     subprocess.run(["mkdir ./5-cDNA_cupcake"],shell=True)
     cmd="collapse_isoforms_by_sam.py -c 0.95 -i 0.85 --max_5_diff  10000 --max_3_diff  10000 --max_fuzzy_junction "+str(max_fuzzy_junction)+" --input ./3-all_FLNC/all_FLNC_nopolyA.fa -s ./4-all_FLNC_minimap2ref/minimap.sort.sam -o ./5-cDNA_cupcake/cDNA_cupcake --cpus "+thread+" 1> ./5-cDNA_cupcake/cDNA_cupcake.log1 2> ./5-cDNA_cupcake/cDNA_cupcake.log2"
@@ -1159,6 +1160,7 @@ if sys.argv[1] =="AS_AS":
         gene_ccs_num	=ccsnum_list[i]
         i+=1
         print("          Processing "+str(i)+"/"+str(gene_num)+":\t"+one_gene,end="\r")
+        if (one_gene+"_1") not in os.listdir("../output0_preparation/7-ccs_inform/ASccs_split/") or (one_gene+"_2") not in os.listdir("../output0_preparation/7-ccs_inform/ASccs_split/"):continue
         with open ("../output0_preparation/7-ccs_inform/ASccs_split/"+one_gene+"_1","r",encoding="ISO-8859-1") as f:
             transcript1_ASlist=[col[0] for col in csv.reader(f,delimiter='\t')] 
         with open ("../output0_preparation/7-ccs_inform/ASccs_split/"+one_gene+"_1","r",encoding="ISO-8859-1") as f:
@@ -1631,6 +1633,7 @@ if sys.argv[1] =="AS_APA":
         one_gene	=gene_list[i]
         gene_ccs_num	=ccsnum_list[i]
         i+=1
+        if (one_gene+"_1") not in os.listdir("../output0_preparation/7-ccs_inform/ASccs_split/") or (one_gene+"_2") not in os.listdir("../output0_preparation/7-ccs_inform/ASccs_split/"):continue
         print("          Processing "+str(i)+"/"+str(gene_num)+":\t"+one_gene,end="\r")
         with open ("../output0_preparation/7-ccs_inform/ASccs_split/"+one_gene+"_1","r",encoding="ISO-8859-1") as f:
             transcript1_ASlist=[col[0] for col in csv.reader(f,delimiter='\t')] 
@@ -1945,6 +1948,7 @@ if sys.argv[1] =="AS_ATI":
         gene_ccs_num	=ccsnum_list[i]
         i+=1
         print("          Processing "+str(i)+"/"+str(gene_num)+":\t"+one_gene,end="\r")
+        if (one_gene+"_1") not in os.listdir("../output0_preparation/7-ccs_inform/ASccs_split/") or (one_gene+"_2") not in os.listdir("../output0_preparation/7-ccs_inform/ASccs_split/"):continue
         with open ("../output0_preparation/7-ccs_inform/ASccs_split/"+one_gene+"_1","r",encoding="ISO-8859-1") as f:
             transcript1_ASlist=[col[0] for col in csv.reader(f,delimiter='\t')] 
         with open ("../output0_preparation/7-ccs_inform/ASccs_split/"+one_gene+"_1","r",encoding="ISO-8859-1") as f:
