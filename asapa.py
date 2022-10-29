@@ -19,7 +19,6 @@ from scipy.stats import chi2_contingency
 from scipy.stats import spearmanr
 from scipy.stats import fisher_exact
 import numpy as np
-#from subprocess import call as sp_call
 
 help_txt="""
 python asapa.py-----help:
