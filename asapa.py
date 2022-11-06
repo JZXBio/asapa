@@ -320,7 +320,7 @@ if sys.argv[1]=="AS_ATI":
         min_ccs_usage_index=""
         for x in sys.argv:
             if "-"==x[0]:
-                if x[1:] not in ["n","log","min_ccsnum_index","min_dSegmentlen","min_KS_statistic","min_ccs_usage"]:print("Error, unrecognized parameter: "+x);exit()  
+                if x[1:] not in ["n","log","min_ccsnum","min_dSegmentlen","min_KS_statistic","min_ccs_usage"]:print("Error, unrecognized parameter: "+x);exit()  
                 elif x[1:] in argument_name_list:print("ERROR: duplicated parameter: "+x);exit()
                 argument_name_list.append(x[1:])
                 argument_index_list.append(i);argument_index_list.append(i+1)
