@@ -385,6 +385,7 @@ if sys.argv[1]=="ATI_APA":
         min_correlation_index=""
         min_geneccs_usage_index=""
         min_TSSPASccs_usage_index=""
+	max_bin_extent_index=""
         for x in sys.argv:
             if "-"==x[0]:
                 if x[1:] not in ["n","log","min_ccsnum","min_correlation","max_bin_extent","min_geneccs_usage","min_TSSPASccs_usage"]:print("Error, unrecognized parameter: "+x);exit()  
@@ -418,8 +419,8 @@ if sys.argv[1]=="ATI_APA":
         if int(min_ccsnum)<1: print("ERROR, min_ccsnum has to be at least 1.");exit()
         if float(min_correlation)<0 or float(min_correlation)>1:print("ERROR, 0<=min_KS_statistic<=1.");exit()
         if int(max_bin_extent)<=0: print("ERROR, max_bin_extent must more than 0.");exit()
-        if float(min_geneccs_usage_index)<0 or float(min_geneccs_usage_index)>1 : print("ERROR, 0<=min_ccs_usage<=1.");exit()
-        if float(min_TSSPASccs_usage_index)<0 or float(min_TSSPASccs_usage_index)>1 : print("ERROR, 0<=min_ccs_usage<=1.");exit()
+        if float(min_geneccs_usage)<0 or float(min_geneccs_usage)>1 : print("ERROR, 0<=min_ccs_usage<=1.");exit()
+        if float(min_TSSPASccs_usage)<0 or float(min_TSSPASccs_usage)>1 : print("ERROR, 0<=min_ccs_usage<=1.");exit()
     if min_ccsnum=="10":
         print("\t-min_ccsnum         \t\t10 (default)")
     else:
